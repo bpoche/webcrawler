@@ -15,24 +15,6 @@ function normalizeURL(urlString){
     }
 }
 
-async function fetchHTML(url) {
-    try {
-        const response = await fetch(url);
-        
-        // Check if the request was successful
-        if (!response.ok) {
-            throw new Error(`HTTP error! Status: ${response.status}`);
-        }
-        
-        // Get the response body as text (HTML content)
-        const html = await response.text();
-        return html;
-    } catch (error) {
-        console.error('Error fetching the HTML:', error);
-        return null;
-    }
-}
-
 function getURLsFromHTML(htmlBody, baseURL){
     const dom = new JSDOM(htmlBody)
     const anchors = dom.window.document.querySelectorAll('a')
@@ -52,8 +34,31 @@ function getURLsFromHTML(htmlBody, baseURL){
     return urls
 }
 
+async function crawlPage(baseURL) {
+
+    let res
+    try {
+        res = await fetch(baseURL)
+    } catch (err) {
+        throw new Error(`Network error fetching the URL: ${err.message}`);
+    }
+
+    // Check if the request was successful
+    if (!res.status > 399) {
+        throw new Error(`HTTP error! Status: ${res.status}`);
+    }
+
+    const contentType = res.headers.get('content-type')
+    if (!contentType || !contentType.includes('text/html')) {
+        console.log(`Not an HTML page, content-type: ${res.headers.get('content-type')}`);
+    }
+
+    console.log(await res.text())
+}
+
 
 export { 
     normalizeURL,
-    getURLsFromHTML
+    getURLsFromHTML,
+    crawlPage
 }
