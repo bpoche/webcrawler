@@ -4,6 +4,8 @@ import {
     crawlPage
 } from "./crawl.js";
 
+import { printReport } from "./report.js";
+
 async function main() {
     const args = argv.slice(2)
     if (args.length === 1) {
@@ -15,7 +17,7 @@ async function main() {
             return
         }
         const pages = await crawlPage(baseURL)
-        console.log(pages)
+        printReport(pages)
         return
     }
     console.log(`Usage: node main.js <url>`)

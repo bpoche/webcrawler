@@ -1,7 +1,6 @@
 import { JSDOM } from 'jsdom'
 
 function normalizeURL(urlString){
-    console.log("normazlizing",urlString)
     const url = new URL(urlString)
     const host = url.host
     let path = url.pathname
@@ -31,7 +30,7 @@ function getURLsFromHTML(htmlBody, baseURL){
 }
 
 async function fetchPage(url) {
-    console.log("Fectching",url)
+    // console.log("Fectching",url)
     let res
     try {
         res = await fetch(url)
@@ -46,7 +45,7 @@ async function fetchPage(url) {
 
     const contentType = res.headers.get('content-type')
     if (!contentType || !contentType.includes('text/html')) {
-        console.log(`Not an HTML page, content-type: ${contentType}`);
+        console.log(`Not an HTML page, url: ${url}, content-type: ${contentType}`);
     }
 
     return await res.text()
@@ -59,7 +58,7 @@ async function crawlPage(baseURL, currentURL = baseURL, pages = {}) {
     const currentURLObj = new URL(currentURL)
     const baseURLObj = new URL(baseURL)
     if (currentURLObj.hostname !== baseURLObj.hostname) {
-        console.log(`hosts do not match, base: ${baseURL}, current: ${currentURL} skipping...`)
+        // console.log(`hosts do not match, base: ${baseURL}, current: ${currentURL} skipping...`)
         return pages
     }
 
